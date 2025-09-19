@@ -1,6 +1,5 @@
 'use strict';
 
-// 학생 과제 가이드: 아래 TODO 지시에 맞춰 기능을 채워 넣으세요.
 // 이 앱은 localStorage를 간단한 DB처럼 사용합니다.
 // key는 'posts' 하나만 사용하며, 값은 배열(JSON 문자열)로 저장됩니다.
 
