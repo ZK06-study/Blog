@@ -66,7 +66,10 @@ const refs = {
 function renderList(posts) {
   // TODO: 빈 목록 메시지/카드 UI를 만들어 refs.list에 렌더
 
-  refs.list.innerHTML = posts.map((post) => {
+  const getTime = (p) => Date.parse(p.updatedAt || p.createdAt)
+  const sorted = [...posts].sort((a,b)=>getTime(b)- getTime(a))
+
+  refs.list.innerHTML = sorted.map((post) => {
   
   return `
     <div class="post-card" data-id="${post.id}">
@@ -112,7 +115,7 @@ function formatDate(iso) {
 function openEditor(mode, post) {
   if (mode === "new") {
     refs.editor.removeAttribute('hidden')
-  refs.titleInput.focus() 
+  refs.titleInput.focus()
   }
 }
 
