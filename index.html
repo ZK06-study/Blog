@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simple Blog</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <h1 class="site-title">Simple Blog</h1>
+        <nav class="site-nav" aria-label="Primary">
+          <button id="new-post-btn" type="button">새 글</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="site-main" id="main-content">
+      <div class="container">
+        <!-- 글 목록이 렌더링될 영역 -->
+        <section id="post-list" aria-live="polite" aria-busy="false"></section>
+
+        <!-- 글 작성/수정 UI는 초기엔 숨김. JS로 열고 닫음. -->
+        <section id="editor" hidden>
+          <h2 id="editor-title">새 글 작성</h2>
+          <form id="post-form" novalidate>
+            <label>
+              제목
+              <input id="title-input" name="title" type="text" required placeholder="제목을 입력하세요" />
+            </label>
+            <label>
+              내용
+              <textarea id="content-input" name="content" rows="8" required placeholder="내용을 입력하세요"></textarea>
+            </label>
+            <div class="actions">
+              <button id="save-post-btn" type="submit">저장</button>
+              <button id="cancel-edit-btn" type="button">취소</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <small>© <span id="year"></span> Simple Blog</small>
+      </div>
+    </footer>
+
+    <script defer src="./app.js"></script>
+  </body>
+  </html>
+
+
