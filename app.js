@@ -1,46 +1,34 @@
 'use strict';
 
-// 이 앱은 localStorage를 간단한 DB처럼 사용합니다.
-// key는 'posts' 하나만 사용하며, 값은 배열(JSON 문자열)로 저장됩니다.
+// - 이 앱은 localStorage를 간단한 DB처럼 사용합니다.
 
-// 상수: 스토리지 키
+// 0) 상수
 const STORAGE_KEY = 'posts';
 
-// 유틸: 안전한 JSON 파싱
+// 1) 안전한 JSON 파싱
 function safeParseJSON(text, fallback) {
-  try {
-    return JSON.parse(text);
-  } catch (_) {
-    return fallback;
-  }
+  // TODO: try/catch로 JSON.parse(text) 실행, 실패 시 fallback 반환
+  return fallback; // 임시 반환
 }
 
-// 1) 스토리지 읽기: 현재 저장된 모든 글 배열을 반환
+// 2) 스토리지 읽기: 저장된 글 배열 불러오기
 function loadPosts() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  const posts = safeParseJSON(raw, []);
-  if (!Array.isArray(posts)) return [];
-  return posts;
+  // TODO: localStorage에서 STORAGE_KEY 값을 읽고 safeParseJSON으로 배열 복원
+  return []; // 임시
 }
 
-// 2) 스토리지 쓰기: 글 배열을 저장
+// 3) 스토리지 쓰기: 글 배열 저장
 function savePosts(posts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  // TODO: JSON.stringify(posts)로 직렬화하여 localStorage에 저장
 }
 
-// 3) 새 글 객체 생성 헬퍼
+// 4) 새 글 객체 생성
 function createPost({ title, content }) {
-  const now = new Date().toISOString();
-  return {
-    id: crypto.randomUUID(),
-    title: String(title || '').trim(),
-    content: String(content || '').trim(),
-    createdAt: now,
-    updatedAt: now,
-  };
+  // TODO: crypto.randomUUID()로 id 생성, createdAt/updatedAt(ISO) 포함한 객체 반환
+  return { id: 'TEMP', title, content, createdAt: '', updatedAt: '' };
 }
 
-// 4) DOM 캐시
+// 5) DOM 참조
 const refs = {
   year: document.getElementById('year'),
   newBtn: document.getElementById('new-post-btn'),
@@ -54,152 +42,59 @@ const refs = {
   cancelBtn: document.getElementById('cancel-edit-btn'),
 };
 
-// 5) 렌더링: 글 목록을 화면에 표시
+// 6) 목록 렌더링
 function renderList(posts) {
-  refs.list.innerHTML = '';
-  if (!posts.length) {
-    refs.list.innerHTML = '<p>아직 작성된 글이 없습니다. "새 글"을 눌러 시작해보세요.</p>';
-    return;
-  }
-
-  const fragment = document.createDocumentFragment();
-  posts
-    .slice()
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-    .forEach((post) => {
-      const card = document.createElement('article');
-      card.className = 'post-card';
-      card.innerHTML = `
-        <h3>${escapeHTML(post.title) || '(제목 없음)'}</h3>
-        <time datetime="${post.updatedAt}">수정: ${formatDate(post.updatedAt)}</time>
-        <p>${escapeHTML(post.content).slice(0, 160)}</p>
-        <div class="actions">
-          <button data-action="edit" data-id="${post.id}">수정</button>
-          <button data-action="delete" data-id="${post.id}">삭제</button>
-        </div>
-      `;
-      fragment.appendChild(card);
-    });
-  refs.list.appendChild(fragment);
+  // TODO: 빈 목록 메시지/카드 UI를 만들어 refs.list에 렌더
 }
 
-// 6) HTML 이스케이프(간단)
+// 7) HTML 이스케이프
 function escapeHTML(text) {
-  return String(text)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  // TODO: &, <, >, ", ' 를 적절히 이스케이프
+  return String(text);
 }
 
-// 7) 날짜 포맷(간단)
+// 8) 날짜 포맷
 function formatDate(iso) {
-  const d = new Date(iso);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${y}-${m}-${dd} ${hh}:${mm}`;
+  // TODO: YYYY-MM-DD HH:mm 형식으로 변환
+  return iso;
 }
 
-// 8) 에디터 표시/숨김
+// 9) 에디터 열기/닫기
 function openEditor(mode, post) {
-  refs.editor.hidden = false;
-  refs.editorTitle.textContent = mode === 'edit' ? '글 수정' : '새 글 작성';
-  if (mode === 'edit' && post) {
-    refs.form.dataset.editingId = post.id;
-    refs.titleInput.value = post.title;
-    refs.contentInput.value = post.content;
-  } else {
-    delete refs.form.dataset.editingId;
-    refs.form.reset();
-  }
-  refs.titleInput.focus();
+  // TODO: mode에 따라 제목 설정 및 입력값 세팅/초기화
 }
 
 function closeEditor() {
-  refs.editor.hidden = true;
-  delete refs.form.dataset.editingId;
-  refs.form.reset();
+  // TODO: 에디터 숨김 및 상태 초기화
 }
 
-// 9) 초기화
+// 10) 초기화
 function init() {
-  // 푸터 연도
-  if (refs.year) refs.year.textContent = new Date().getFullYear();
+  // TODO: year 세팅
+  // TODO: 초기 렌더(renderList(loadPosts()))
 
-  // 최초 렌더
-  renderList(loadPosts());
+  // TODO: 새 글 버튼 클릭 시 openEditor('new')
+  // refs.newBtn.addEventListener('click', () => {});
 
-  // 이벤트: 새 글 버튼
-  refs.newBtn.addEventListener('click', () => openEditor('new'));
+  // TODO: 취소 버튼 클릭 시 closeEditor()
+  // refs.cancelBtn.addEventListener('click', () => {});
 
-  // 이벤트: 에디터 취소
-  refs.cancelBtn.addEventListener('click', () => closeEditor());
-
-  // 이벤트: 글 저장(신규/수정 공용)
+  // TODO: 제출 핸들러 - 신규/수정 분기 및 저장
   refs.form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const title = refs.titleInput.value;
-    const content = refs.contentInput.value;
-
-    if (!title.trim() || !content.trim()) {
-      alert('제목과 내용을 입력하세요.');
-      return;
-    }
-
-    const posts = loadPosts();
-    const editingId = refs.form.dataset.editingId;
-    if (editingId) {
-      // 수정
-      const idx = posts.findIndex((p) => p.id === editingId);
-      if (idx !== -1) {
-        posts[idx] = {
-          ...posts[idx],
-          title: title.trim(),
-          content: content.trim(),
-          updatedAt: new Date().toISOString(),
-        };
-      }
-      savePosts(posts);
-    } else {
-      // 신규
-      const newPost = createPost({ title, content });
-      posts.push(newPost);
-      savePosts(posts);
-    }
-
-    renderList(loadPosts());
-    closeEditor();
+    // TODO: 제목/내용 읽기, 공백 검증
+    // TODO: editingId 유무로 수정/신규 처리
+    // TODO: savePosts, renderList 후 에디터 닫기
   });
 
-  // 이벤트 위임: 목록의 수정/삭제
+  // TODO: 목록에서 수정/삭제 버튼 이벤트 위임
   refs.list.addEventListener('click', (e) => {
     const target = e.target;
-    if (!(target instanceof HTMLElement)) return;
-    const action = target.dataset.action;
-    const id = target.dataset.id;
-    if (!action || !id) return;
-
-    if (action === 'edit') {
-      const post = loadPosts().find((p) => p.id === id);
-      if (post) openEditor('edit', post);
-      return;
-    }
-
-    if (action === 'delete') {
-      if (!confirm('정말 삭제하시겠어요?')) return;
-      const posts = loadPosts().filter((p) => p.id !== id);
-      savePosts(posts);
-      renderList(posts);
-      return;
-    }
+    // TODO: data-action(edit/delete), data-id 활용
   });
 }
 
-// 엔트리 포인트
+// 11) 엔트리 포인트
 document.addEventListener('DOMContentLoaded', init);
 
 
